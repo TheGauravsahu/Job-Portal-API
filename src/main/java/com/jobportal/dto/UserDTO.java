@@ -31,10 +31,10 @@ public class UserDTO {
             message = "Password must contain at least one uppercase letter, one lowercase letter, and one digit. Special characters are optional but allowed."
     )
     private String password;
-
+    private Boolean isVerified;
     private UserRoles role;
 
     public User toEntity() {
-        return new User(this.id, this.name, this.email, this.password, false, this.role);
+        return new User(this.id, this.name, this.email, this.password, this.isVerified, this.role);
     }
 }

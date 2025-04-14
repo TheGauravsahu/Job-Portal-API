@@ -2,6 +2,7 @@ package com.jobportal.controller;
 
 import com.jobportal.dto.Job.CreateJobRequest;
 import com.jobportal.dto.Job.JobResponseDTO;
+import com.jobportal.dto.Job.JobSummaryDTO;
 import com.jobportal.dto.ResponseDTO;
 import com.jobportal.exceptions.JobPortalException;
 import com.jobportal.service.JobService;
@@ -23,34 +24,34 @@ public class JobController {
     private JobService jobService;
 
     @PostMapping
-    public ResponseEntity<ResponseDTO> createJob(@RequestBody @Valid CreateJobRequest jobRequest, Authentication authentication) throws JobPortalException {
+    public ResponseEntity<ResponseDTO> createJob(@RequestBody @Valid CreateJobRequest jobRequest, Authentication authentication) throws Exception {
         String email = authentication.getName();
-        jobService.createJob(jobRequest,email);
+        jobService.createJob(jobRequest, email);
         return ResponseEntity.ok(new ResponseDTO("Job created successfully."));
     }
 
     @GetMapping
-    public ResponseEntity<List<JobResponseDTO>> listJobs () throws JobPortalException {
-        List<JobResponseDTO> jobs = jobService.getAllJobs();
+    public ResponseEntity<List<JobSummaryDTO>> listJobs() throws JobPortalException {
+        List<JobSummaryDTO> jobs = jobService.getAllJobs();
         return ResponseEntity.ok(jobs);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<JobResponseDTO> getJobById(@PathVariable String id) throws JobPortalException{
+    public ResponseEntity<JobResponseDTO> getJobById(@PathVariable String id) throws JobPortalException {
         return ResponseEntity.ok(jobService.getJobById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDTO> updateJOb(@PathVariable String id, Authentication authentication, @RequestBody @Valid CreateJobRequest jobRequest) throws JobPortalException{
+    public ResponseEntity<ResponseDTO> updateJOb(@PathVariable String id, Authentication authentication, @RequestBody @Valid CreateJobRequest jobRequest) throws JobPortalException {
         String email = authentication.getName();
-        jobService.updateJob(id,jobRequest,email);
+        jobService.updateJob(id, jobRequest, email);
         return ResponseEntity.ok(new ResponseDTO("Job updated successfully."));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDTO> deleteJob(@PathVariable String id, Authentication authentication) throws JobPortalException{
+    public ResponseEntity<ResponseDTO> deleteJob(@PathVariable String id, Authentication authentication) throws JobPortalException {
         String email = authentication.getName();
-        jobService.deleteJob(id,email);
+        jobService.deleteJob(id, email);
         return ResponseEntity.ok(new ResponseDTO("Job deleted successfully."));
     }
 

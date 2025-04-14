@@ -1,8 +1,6 @@
 package com.jobportal.service;
 
-import com.jobportal.dto.ChangePasswordDTO;
-import com.jobportal.dto.LoginDTO;
-import com.jobportal.dto.UserDTO;
+import com.jobportal.dto.*;
 import com.jobportal.entity.Otp;
 import com.jobportal.entity.User;
 import com.jobportal.exceptions.JobPortalException;
@@ -49,19 +47,29 @@ public class UserServiceImpl implements UserService {
 
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User user = userDTO.toEntity();
+        if (user.getRole() == null) {
+            user.setRole(UserRoles.APPLICANT);
+        }
+        user.setIsVerified(false);
         user = userRepository.save(user);
+        user.setPassword(null);
         return user.toDTO();
     }
 
     @Override
-    public String loginUser(LoginDTO loginDTO) throws JobPortalException {
+    public LoginResponseDTO loginUser(LoginDTO loginDTO) throws JobPortalException {
         User user = userRepository.findByEmail(loginDTO.getEmail())
                 .orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
 
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword()))
             throw new JobPortalException("INVALID_CREDENTIAL");
+        // Generate JWT token
+        String token = jwtUtils.generateToken(user.getEmail());
 
-        return jwtUtils.generateToken(user.getEmail());
+        UserDTO userDTO = user.toDTO();
+        userDTO.setPassword(null);
+
+        return new LoginResponseDTO(token, userDTO);
     }
 
     @Override

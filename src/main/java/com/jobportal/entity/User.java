@@ -19,9 +19,9 @@ public class User {
     private String email;
     private String password;
     private Boolean isVerified = false;
-    private UserRoles role;
+    private UserRoles role = UserRoles.APPLICANT;
 
     public UserDTO toDTO() {
-        return new UserDTO(this.id, this.name, this.email, this.password,this.role);
+        return new UserDTO(this.id, this.name, this.email, this.password, this.isVerified ,this.role);
     }
 }
