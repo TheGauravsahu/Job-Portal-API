@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,12 @@ public class UserAPI {
 
         response.addCookie(cookie);
         return ResponseEntity.ok(loginResponseDTO);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> getUserInfo(Authentication authentication) throws JobPortalException {
+        String email = authentication.getName();
+        return ResponseEntity.ok(userService.getCurrentUser(email));
     }
 
     @PutMapping("/change-password")
